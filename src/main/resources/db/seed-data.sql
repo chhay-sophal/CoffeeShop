@@ -26,6 +26,7 @@ CREATE TABLE "order_items" (
 	"amount"	INTEGER NOT NULL,
 	"total_price"	INTEGER NOT NULL,
 	"paid"	INTEGER NOT NULL,
+	"completed" INTEGER NOT NULL,
 	PRIMARY KEY("id" AUTOINCREMENT),
 	FOREIGN KEY("item_id") REFERENCES "menu"("id")
 );
