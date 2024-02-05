@@ -1,0 +1,3 @@
+db.url=jdbc:sqlite:path/to/your/database
+db.user=
+db.password=
