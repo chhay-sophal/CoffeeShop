@@ -12,6 +12,7 @@ target/
 *.iml
 *.ipr
 src/main/resources/config.properties
+*.db
 
 ### Eclipse ###
 .apt_generated
