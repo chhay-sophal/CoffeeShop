@@ -2,9 +2,10 @@ import database.DatabaseHelper;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.FocusAdapter;
 import java.sql.*;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -13,13 +14,17 @@ public class Dashboard extends JFrame implements UserCreatedListener {
     private static final String APPLICATIONS_FILE = "config.properties";
     private JPanel dashboardPanel;
     private JTabbedPane tabbedPane1;
-    private JButton createAStaffAccountButton;
+    private JButton createAnEmployeeAccountButton;
     private JTable tableStaff;
+    private JTable tableUser;
+    private JButton createAUserAccountButton;
+    private JTable table1;
+    private JButton button1;
     private DefaultTableModel staffTableModel;
 
     public Dashboard() {
 
-        createAStaffAccountButton.addActionListener(new ActionListener() {
+        createAnEmployeeAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Create and show the dialog when the button is clicked
@@ -38,6 +43,16 @@ public class Dashboard extends JFrame implements UserCreatedListener {
 
         // Fetch staff data from the database
         fetchStaffData();
+        createAUserAccountButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        tabbedPane1.addComponentListener(new ComponentAdapter() {
+        });
+        tabbedPane1.addFocusListener(new FocusAdapter() {
+        });
     }
 
     private void fetchStaffData() {
