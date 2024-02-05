@@ -21,23 +21,19 @@ CREATE TABLE "users" (
 );
 
 CREATE TABLE "order_items" (
-	"id"	INTEGER NOT NULL,
+	"id" INTEGER PRIMARY KEY AUTOINCREMENT,
 	"item_id"	INTEGER NOT NULL,
 	"amount"	INTEGER NOT NULL,
 	"total_price"	INTEGER NOT NULL,
 	"paid"	INTEGER NOT NULL,
 	"completed" INTEGER NOT NULL,
-	PRIMARY KEY("id" AUTOINCREMENT),
 	FOREIGN KEY("item_id") REFERENCES "menu"("id")
 );
 
 CREATE TABLE "sold_items" (
-	"id"	INTEGER NOT NULL,
-	"sold_item"	INTEGER NOT NULL,
-	"amount"	INTEGER NOT NULL,
-	"total_price"	NUMERIC NOT NULL,
-	PRIMARY KEY("id" AUTOINCREMENT),
-	FOREIGN KEY("sold_item") REFERENCES "menu"("id")
+    "id" INTEGER PRIMARY KEY AUTOINCREMENT,
+    "order_item_id" INTEGER NOT NULL,
+    FOREIGN KEY("order_item_id") REFERENCES "order_items"("id")
 );
 
 -- menu_seed.sql
@@ -60,8 +56,10 @@ INSERT INTO users (username, password, user_type) VALUES ('nidate', '1234', 3);
 -- Add more user data as needed
 
 -- order_items_seed.sql
-INSERT INTO order_items (item_id, amount, total_price, paid) VALUES (1, 2, 7.00, 1);
-INSERT INTO order_items (item_id, amount, total_price, paid) VALUES (2, 1, 4.00, 1);
+INSERT INTO order_items (item_id, amount, total_price, paid, completed) VALUES (1, 2, 7.00, 1, 0);
+INSERT INTO order_items (item_id, amount, total_price, paid, completed) VALUES (3, 1, 9.00, 1, 0);
+INSERT INTO order_items (item_id, amount, total_price, paid, completed) VALUES (4, 3, 9.00, 0, 1);
+INSERT INTO order_items (item_id, amount, total_price, paid, completed) VALUES (2, 1, 4.00, 1, 1);
 -- Add more order items as needed
 
 -- sold_items_seed.sql
