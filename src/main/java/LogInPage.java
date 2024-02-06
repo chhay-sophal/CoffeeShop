@@ -61,16 +61,29 @@ public class LogInPage extends JFrame {
                             rowCount++;
 
                             String storedPassword = resultSet.getString("password");
-                            if (storedPassword.equals(inputPassword)) {
+                            String storedUsername = resultSet.getString("username");
+
+                            //set admin username and password
+                            String userAdmin = "Admin";
+                            String passwordAdmin = "adminComplexPsw123";
+
+                            if (storedPassword.equals(inputPassword) && storedUsername.equals(inputUsername)) {
+                                if (inputUsername.equals(userAdmin) && inputPassword.equals(passwordAdmin)){
+                                    //Navigate to admin page
+                                } else{
+                                    //Navigate to user page
+                                }
                                 // Valid login: Implement your logic here (e.g., open a new window)
                                 System.out.println("Login successful!");
                                 break; // Exit the loop since a valid login is found
                             }
+                            
                         }
 
                         if (rowCount == 0) {
                             // Invalid username
                             System.out.println("Invalid username!");
+
                         } else if (rowCount > 0) {
                             // Invalid password
                             System.out.println("Invalid password!");
@@ -90,6 +103,7 @@ public class LogInPage extends JFrame {
 //        }
 //        return rowCount;
 //    }
+
     public static void main(String[] args) throws SQLException {
 
         LogInPage logInPage = new LogInPage();
