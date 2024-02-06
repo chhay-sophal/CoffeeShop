@@ -77,14 +77,46 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
         updateEmployeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                if (userID != null) {
+                    UpdateEmployeeClass updateEmployeeClass = new UpdateEmployeeClass(Dashboard.this, Integer.parseInt(userID), userUsername, userUserType);
+                    updateEmployeeClass.pack();
+                    updateEmployeeClass.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an item.");
+                }
             }
         });
         // Delete an employee
         deleteEmployeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (menuID != null) {
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "This user with id " + userID + " username " + userUsername + " will be deleted from the database. \n" +
+                            "This action can't be undone!\n" +
+                            "Are you sure want to delete?");
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        try (Connection connection = DatabaseHelper.getConnection()) {
+                            assert connection != null;
 
+                            String deleteQuery = "DELETE FROM menu WHERE id = ?";
+
+                            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+                                preparedStatement.setInt(1, Integer.parseInt(userID));
+                                preparedStatement.executeUpdate();
+                            }
+
+                            fetchMenuData();
+                        } catch (SQLException ex) {
+                            // Log the exception with relevant details
+                            Logger logger = Logger.getLogger(Dashboard.class.getName()); // Assuming a Logger instance is available
+                            logger.log(Level.SEVERE, "Error deleting menu data", ex);
+                            // Optionally, display a user-friendly error message
+                            JOptionPane.showMessageDialog(null, "An error occurred while deleting menu data. Please check the logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an item.");
+                }
             }
         });
 
@@ -134,7 +166,33 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
         deleteCustomerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                if (menuID != null) {
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "This user with id " + userID + " username " + userUsername + " will be deleted from the database. \n" +
+                            "This action can't be undone!\n" +
+                            "Are you sure want to delete?");
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        try (Connection connection = DatabaseHelper.getConnection()) {
+                            assert connection != null;
 
+                            String deleteQuery = "DELETE FROM menu WHERE id = ?";
+
+                            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+                                preparedStatement.setInt(1, Integer.parseInt(userID));
+                                preparedStatement.executeUpdate();
+                            }
+
+                            fetchMenuData();
+                        } catch (SQLException ex) {
+                            // Log the exception with relevant details
+                            Logger logger = Logger.getLogger(Dashboard.class.getName()); // Assuming a Logger instance is available
+                            logger.log(Level.SEVERE, "Error deleting menu data", ex);
+                            // Optionally, display a user-friendly error message
+                            JOptionPane.showMessageDialog(null, "An error occurred while deleting menu data. Please check the logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an item.");
+                }
             }
         });
 
@@ -177,9 +235,9 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (menuID != null) {
-                    ModifyMenuClass modifyMenuClass = new ModifyMenuClass(Dashboard.this, menuName, menuPrice);
-                    modifyMenuClass.pack();
-                    modifyMenuClass.setVisible(true);
+                    UpdateMenuClass updateMenuClass = new UpdateMenuClass(Dashboard.this, Integer.parseInt(menuID), menuName, menuPrice);
+                    updateMenuClass.pack();
+                    updateMenuClass.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Please select an item.");
                 }

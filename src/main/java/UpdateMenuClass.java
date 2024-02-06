@@ -8,16 +8,18 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class ModifyMenuClass extends JDialog {
+public class UpdateMenuClass extends JDialog {
     private JPanel contentPane;
     private JButton buttonOK;
     private JButton buttonCancel;
     private JTextField textFieldName;
     private JTextField textFieldPrice;
     private final ItemCreatedListener itemCreatedListener;
+    private final int menuID;
 
-    public ModifyMenuClass(ItemCreatedListener listener, String textFieldName, String textFieldPrice) {
+    public UpdateMenuClass(ItemCreatedListener listener, int id, String textFieldName, String textFieldPrice) {
         this.itemCreatedListener = listener;
+        this.menuID = id;
         System.out.print(textFieldName);
         this.textFieldName.setText(textFieldName);
         this.textFieldPrice.setText(textFieldPrice);
@@ -59,45 +61,41 @@ public class ModifyMenuClass extends JDialog {
         String name = textFieldName.getText();
         double price = Double.parseDouble(textFieldPrice.getText());
 
-        // Insert data into the database
+        // Update data in the database
         try (Connection connection = DatabaseHelper.getConnection()) {
             assert connection != null;
 
-            // Prepare the SQL statement for insertion
-            String insertSql = "INSERT INTO menu (name, price) VALUES (?, ?) where id = 1";
-            try (PreparedStatement preparedStatement = connection.prepareStatement(insertSql)) {
+            // Prepare the SQL statement for updating
+            String updateSql = "UPDATE menu SET name = ?, price = ? WHERE id = ?";
+            try (PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
                 // Set parameters for the prepared statement
                 preparedStatement.setString(1, name);
                 preparedStatement.setDouble(2, price);
+                preparedStatement.setInt(3, this.menuID);
 
                 // Execute the SQL statement
-                preparedStatement.executeUpdate();
-            }
+                int rowsAffected = preparedStatement.executeUpdate();
 
-            JOptionPane.showMessageDialog(this, "Menu modified successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
-            // Notify the listener when a user is created
-            if (itemCreatedListener != null) {
-                itemCreatedListener.onItemCreated();
+                if (rowsAffected > 0) {
+                    JOptionPane.showMessageDialog(this, "Menu modified successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+                    // Notify the listener when a menu is modified
+                    if (itemCreatedListener != null) {
+                        itemCreatedListener.onItemCreated();
+                    }
+                    dispose(); // Close the dialog after successful update
+                } else {
+                    JOptionPane.showMessageDialog(this, "Menu with ID " + menuID + " not found", "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-            dispose(); // Close the dialog after successful insertion
         } catch (SQLException e) {
-            Logger logger = Logger.getLogger(Dashboard.class.getName()); // Assuming a Logger instance is available
-            logger.log(Level.SEVERE, "Error fetching sale data", e);
+            Logger logger = Logger.getLogger(Dashboard.class.getName());
+            logger.log(Level.SEVERE, "Error modifying menu", e);
             JOptionPane.showMessageDialog(this, "Error modifying menu", "Error", JOptionPane.ERROR_MESSAGE);
         }
-
-        dispose();
     }
 
     private void onCancel() {
         // add your code here if necessary
         dispose();
     }
-
-//    public static void main(String[] args) {
-//        ModifyMenuClass dialog = new ModifyMenuClass();
-//        dialog.pack();
-//        dialog.setVisible(true);
-//        System.exit(0);
-//    }
 }
