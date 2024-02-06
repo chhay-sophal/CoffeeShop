@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="dashboardPanel" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="10" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="20" y="20" width="1156" height="713"/>
+      <xy x="20" y="20" width="750" height="549"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -48,7 +48,7 @@
                     <properties>
                       <autoCreateColumnsFromModel value="true"/>
                       <autoCreateRowSorter value="true"/>
-                      <font size="16"/>
+                      <font/>
                       <showVerticalLines value="true"/>
                     </properties>
                   </component>
@@ -66,32 +66,13 @@
             <children>
               <component id="fe36" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <font size="28"/>
                   <text value="Employees Management"/>
                 </properties>
               </component>
-              <component id="98a84" class="javax.swing.JButton" binding="createAnEmployeeButton">
-                <constraints>
-                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <font size="20"/>
-                  <text value="Create a Employee Account"/>
-                </properties>
-              </component>
-              <hspacer id="4a0c7">
-                <constraints>
-                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
-              <hspacer id="7d82f">
-                <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
               <scrollpane id="d32d3">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -101,15 +82,40 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="9d792" class="javax.swing.JTable" binding="tableStaff">
+                  <component id="9d792" class="javax.swing.JTable" binding="tableEmployee">
                     <constraints/>
                     <properties>
                       <autoCreateRowSorter value="true"/>
-                      <font size="16"/>
+                      <font/>
                     </properties>
                   </component>
                 </children>
               </scrollpane>
+              <component id="6f9ed" class="javax.swing.JButton" binding="deleteEmployeeButton">
+                <constraints>
+                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Delete"/>
+                </properties>
+              </component>
+              <component id="98a84" class="javax.swing.JButton" binding="createEmployeeButton">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font/>
+                  <text value="Create"/>
+                </properties>
+              </component>
+              <component id="ccf11" class="javax.swing.JButton" binding="updateEmployeeButton">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Update"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <grid id="7c722" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -122,32 +128,13 @@
             <children>
               <component id="3e428" class="javax.swing.JLabel">
                 <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+                  <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
                   <font size="28"/>
                   <text value="Customer Accounts"/>
                 </properties>
               </component>
-              <component id="83a5c" class="javax.swing.JButton" binding="createACustomerButton">
-                <constraints>
-                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <font size="20"/>
-                  <text value="Create a Customer Account"/>
-                </properties>
-              </component>
-              <hspacer id="96ca9">
-                <constraints>
-                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
-              <hspacer id="ec392">
-                <constraints>
-                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-              </hspacer>
               <scrollpane id="9547d">
                 <constraints>
                   <grid row="1" column="0" row-span="1" col-span="3" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
@@ -158,14 +145,39 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <component id="b1a4f" class="javax.swing.JTable" binding="tableCustomers">
+                  <component id="b1a4f" class="javax.swing.JTable" binding="tableCustomer">
                     <constraints/>
                     <properties>
-                      <font size="16"/>
+                      <font/>
                     </properties>
                   </component>
                 </children>
               </scrollpane>
+              <component id="f1192" class="javax.swing.JButton" binding="deleteCustomerButton">
+                <constraints>
+                  <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Delete"/>
+                </properties>
+              </component>
+              <component id="83a5c" class="javax.swing.JButton" binding="createCustomerButton">
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <font/>
+                  <text value="Create"/>
+                </properties>
+              </component>
+              <component id="dd6e1" class="javax.swing.JButton" binding="updateCustomerButton">
+                <constraints>
+                  <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Update"/>
+                </properties>
+              </component>
             </children>
           </grid>
           <grid id="453c6" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -181,7 +193,7 @@
                   <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <font size="28" style="1"/>
+                  <font size="28"/>
                   <text value="Menu Management"/>
                 </properties>
               </component>
@@ -195,33 +207,36 @@
                   <component id="e75af" class="javax.swing.JTable" binding="tableMenu">
                     <constraints/>
                     <properties>
-                      <font size="16"/>
+                      <font/>
                     </properties>
                   </component>
                 </children>
               </scrollpane>
-              <component id="ea73e" class="javax.swing.JButton" binding="addAMenuButton" default-binding="true">
+              <component id="ea73e" class="javax.swing.JButton" binding="createMenuButton">
                 <constraints>
                   <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Add a Menu"/>
+                  <font/>
+                  <text value="Create"/>
                 </properties>
               </component>
-              <component id="2730" class="javax.swing.JButton" binding="modifyAMenuButton" default-binding="true">
+              <component id="2730" class="javax.swing.JButton" binding="updateMenuButton">
                 <constraints>
                   <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Modify a Menu"/>
+                  <font/>
+                  <text value="Update"/>
                 </properties>
               </component>
-              <component id="221c8" class="javax.swing.JButton" binding="deleteAMenuButton" default-binding="true">
+              <component id="221c8" class="javax.swing.JButton" binding="deleteMenuButton">
                 <constraints>
                   <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
                 </constraints>
                 <properties>
-                  <text value="Delete a Menu"/>
+                  <font/>
+                  <text value="Delete"/>
                 </properties>
               </component>
             </children>

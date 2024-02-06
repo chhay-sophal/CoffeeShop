@@ -6,8 +6,6 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.sql.*;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -18,24 +16,55 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
     private static final String APPLICATIONS_FILE = "config.properties";
     private JPanel dashboardPanel;
     private JTabbedPane tabbedPane1;
-    private JButton createAnEmployeeButton;
-    private JTable tableStaff;
-    private JTable tableCustomers;
-    private JButton createACustomerButton;
+    private JButton createEmployeeButton;
+    private JTable tableEmployee;
+    private JTable tableCustomer;
+    private JButton createCustomerButton;
     private JTable tableSale;
     private JTable tableMenu;
-    private JButton addAMenuButton;
-    private JButton modifyAMenuButton;
-    private JButton deleteAMenuButton;
+    private JButton createMenuButton;
+    private JButton updateMenuButton;
+    private JButton deleteMenuButton;
+    private JButton deleteEmployeeButton;
+    private JButton updateEmployeeButton;
+    private JButton deleteCustomerButton;
+    private JButton updateCustomerButton;
     private DefaultTableModel staffTableModel, saleTableModel, customerTableModel, menuTableModel;
+    private String userID, userUsername, userUserType;
     private String menuID, menuName, menuPrice;
+
     public Dashboard() {
         fetchSaleData();
         fetchEmployeesData();
         fetchCustomersData();
         fetchMenuData();
 
-        createAnEmployeeButton.addActionListener(new ActionListener() {
+        // Employee
+        tableEmployee.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        // Select a row in employee
+        tableEmployee.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = tableEmployee.getSelectedRow();
+
+                    // Make sure a row is selected
+                    if (selectedRow != -1) {
+                        // Get the data from the selected row
+                        Object valueID = tableEmployee.getValueAt(selectedRow, 0);
+                        Object valueUsername = tableEmployee.getValueAt(selectedRow, 1);
+                        Object valueUserType = tableEmployee.getValueAt(selectedRow, 2);
+
+                        // Use the values as needed
+                        userID = valueID.toString();
+                        userUsername = valueUsername.toString();
+                        userUserType = valueUserType.toString();
+                    }
+                }
+            }
+        });
+        // Create an employee
+        createEmployeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Create and show the dialog when the button is clicked
@@ -44,8 +73,48 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
                 addEmployeeClass.setVisible(true);
             }
         });
+        // Update an employee
+        updateEmployeeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
 
-        createACustomerButton.addActionListener(new ActionListener() {
+            }
+        });
+        // Delete an employee
+        deleteEmployeeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+
+        // Customer
+        tableCustomer.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        // Select a row in customer
+        tableCustomer.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = tableCustomer.getSelectedRow();
+
+                    // Make sure a row is selected
+                    if (selectedRow != -1) {
+                        // Get the data from the selected row
+                        Object valueID = tableCustomer.getValueAt(selectedRow, 0);
+                        Object valueUsername = tableCustomer.getValueAt(selectedRow, 1);
+                        Object valueUserType = tableCustomer.getValueAt(selectedRow, 2);
+
+                        // Use the values as needed
+                        userID = valueID.toString();
+                        userUsername = valueUsername.toString();
+                        userUserType = valueUserType.toString();
+                    }
+                }
+            }
+        });
+        // Create a customer
+        createCustomerButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Create and show the dialog when the button is clicked
@@ -54,6 +123,21 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
                 addCustomerClass.setVisible(true);
             }
         });
+        // Update a customer
+        updateCustomerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        // Delete a customer
+        deleteCustomerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
 
         // Menu
         tableMenu.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -79,8 +163,8 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
                 }
             }
         });
-        // Add a menu
-        addAMenuButton.addActionListener(new ActionListener() {
+        // Create a menu
+        createMenuButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AddMenuClass addMenuClass = new AddMenuClass(Dashboard.this);
@@ -88,8 +172,8 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
                 addMenuClass.setVisible(true);
             }
         });
-        // Modify a menu
-        modifyAMenuButton.addActionListener(new ActionListener() {
+        // Update a menu
+        updateMenuButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (menuID != null) {
@@ -102,7 +186,7 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
             }
         });
         // Delete a menu
-        deleteAMenuButton.addActionListener(new ActionListener() {
+        deleteMenuButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (menuID != null) {
@@ -204,7 +288,7 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
                 }
 
                 // Set the table model to the JTable component
-                tableStaff.setModel(staffTableModel);
+                tableEmployee.setModel(staffTableModel);
 
             }
         } catch (SQLException e) {
@@ -240,7 +324,7 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
                 }
 
                 // Set the table model to the JTable component
-                tableCustomers.setModel(customerTableModel);
+                tableCustomer.setModel(customerTableModel);
 
             }
         } catch (SQLException e) {
