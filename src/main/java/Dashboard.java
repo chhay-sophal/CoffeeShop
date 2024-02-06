@@ -1,9 +1,13 @@
 import database.DatabaseHelper;
 
 import javax.swing.*;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.sql.*;
 import java.sql.SQLException;
 import java.util.Vector;
@@ -24,7 +28,7 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
     private JButton modifyAMenuButton;
     private JButton deleteAMenuButton;
     private DefaultTableModel staffTableModel, saleTableModel, customerTableModel, menuTableModel;
-
+    private String menuID, menuName, menuPrice;
     public Dashboard() {
         fetchSaleData();
         fetchEmployeesData();
@@ -50,12 +54,84 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
                 addCustomerClass.setVisible(true);
             }
         });
+
+        // Menu
+        tableMenu.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        // Select a row in Menu
+        tableMenu.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    int selectedRow = tableMenu.getSelectedRow();
+
+                    // Make sure a row is selected
+                    if (selectedRow != -1) {
+                        // Get the data from the selected row
+                        Object valueID = tableMenu.getValueAt(selectedRow, 0);
+                        Object valueName = tableMenu.getValueAt(selectedRow, 1);
+                        Object valuePrice = tableMenu.getValueAt(selectedRow, 2);
+
+                        // Use the values as needed
+                        menuID = valueID.toString();
+                        menuName = valueName.toString();
+                        menuPrice = valuePrice.toString();
+                    }
+                }
+            }
+        });
+        // Add a menu
         addAMenuButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 AddMenuClass addMenuClass = new AddMenuClass(Dashboard.this);
                 addMenuClass.pack();
                 addMenuClass.setVisible(true);
+            }
+        });
+        // Modify a menu
+        modifyAMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (menuID != null) {
+                    ModifyMenuClass modifyMenuClass = new ModifyMenuClass(Dashboard.this, menuName, menuPrice);
+                    modifyMenuClass.pack();
+                    modifyMenuClass.setVisible(true);
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an item.");
+                }
+            }
+        });
+        // Delete a menu
+        deleteAMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (menuID != null) {
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "This item menu with id " + menuID + " name " + menuName + " will be deleted from the database. \n" +
+                            "This action can't be undone!\n" +
+                            "Are you sure want to delete?");
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        try (Connection connection = DatabaseHelper.getConnection()) {
+                            assert connection != null;
+
+                            String deleteQuery = "DELETE FROM menu WHERE id = ?";
+
+                            try (PreparedStatement preparedStatement = connection.prepareStatement(deleteQuery)) {
+                                preparedStatement.setInt(1, Integer.parseInt(menuID));
+                                preparedStatement.executeUpdate();
+                            }
+
+                            fetchMenuData();
+                        } catch (SQLException ex) {
+                            // Log the exception with relevant details
+                            Logger logger = Logger.getLogger(Dashboard.class.getName()); // Assuming a Logger instance is available
+                            logger.log(Level.SEVERE, "Error deleting menu data", ex);
+                            // Optionally, display a user-friendly error message
+                            JOptionPane.showMessageDialog(null, "An error occurred while deleting menu data. Please check the logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Please select an item.");
+                }
             }
         });
     }
