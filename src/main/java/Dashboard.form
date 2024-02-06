@@ -48,7 +48,7 @@
                     <properties>
                       <autoCreateColumnsFromModel value="true"/>
                       <autoCreateRowSorter value="true"/>
-                      <font size="20"/>
+                      <font size="16"/>
                       <showVerticalLines value="true"/>
                     </properties>
                   </component>
@@ -105,7 +105,7 @@
                     <constraints/>
                     <properties>
                       <autoCreateRowSorter value="true"/>
-                      <font size="20"/>
+                      <font size="16"/>
                     </properties>
                   </component>
                 </children>
@@ -161,7 +161,7 @@
                   <component id="b1a4f" class="javax.swing.JTable" binding="tableCustomers">
                     <constraints/>
                     <properties>
-                      <font size="20"/>
+                      <font size="16"/>
                     </properties>
                   </component>
                 </children>
