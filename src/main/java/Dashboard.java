@@ -19,7 +19,6 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
     private JTable tableCustomers;
     private JButton createACustomerButton;
     private JTable tableSale;
-    private JButton deleteASaleItemButton;
     private JTable tableMenu;
     private JButton addAMenuButton;
     private JButton modifyAMenuButton;
@@ -49,13 +48,6 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
                 AddCustomerClass addCustomerClass = new AddCustomerClass(Dashboard.this);
                 addCustomerClass.pack();
                 addCustomerClass.setVisible(true);
-            }
-        });
-
-        deleteASaleItemButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-
             }
         });
         addAMenuButton.addActionListener(new ActionListener() {
