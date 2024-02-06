@@ -7,38 +7,63 @@ import java.awt.event.ActionListener;
 import java.sql.*;
 import java.sql.SQLException;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class Dashboard extends JFrame implements UserCreatedListener {
+public class Dashboard extends JFrame implements ItemCreatedListener {
     private static final String APPLICATIONS_FILE = "config.properties";
     private JPanel dashboardPanel;
     private JTabbedPane tabbedPane1;
-    private JButton createAnEmployeeAccountButton;
+    private JButton createAnEmployeeButton;
     private JTable tableStaff;
-    private JTable tableUser;
-    private JButton createAUserAccountButton;
+    private JTable tableCustomers;
+    private JButton createACustomerButton;
     private JTable tableSale;
-    private JButton button1;
-    private DefaultTableModel staffTableModel;
+    private JButton deleteASaleItemButton;
+    private JTable tableMenu;
+    private JButton addAMenuButton;
+    private JButton modifyAMenuButton;
+    private JButton deleteAMenuButton;
+    private DefaultTableModel staffTableModel, saleTableModel, customerTableModel, menuTableModel;
 
     public Dashboard() {
         fetchSaleData();
         fetchEmployeesData();
+        fetchCustomersData();
+        fetchMenuData();
 
-        createAnEmployeeAccountButton.addActionListener(new ActionListener() {
+        createAnEmployeeButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Create and show the dialog when the button is clicked
-                AddStaffClass createStaffDialog = new AddStaffClass(Dashboard.this);
-                createStaffDialog.setSize(500, 300);
-                createStaffDialog.pack();
-                createStaffDialog.setVisible(true);
+                AddEmployeeClass addEmployeeClass = new AddEmployeeClass(Dashboard.this);
+                addEmployeeClass.pack();
+                addEmployeeClass.setVisible(true);
             }
         });
 
-        createAUserAccountButton.addActionListener(new ActionListener() {
+        createACustomerButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                // Create and show the dialog when the button is clicked
+                AddCustomerClass addCustomerClass = new AddCustomerClass(Dashboard.this);
+                addCustomerClass.pack();
+                addCustomerClass.setVisible(true);
+            }
+        });
+
+        deleteASaleItemButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
+            }
+        });
+        addAMenuButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                AddMenuClass addMenuClass = new AddMenuClass(Dashboard.this);
+                addMenuClass.pack();
+                addMenuClass.setVisible(true);
             }
         });
     }
@@ -46,121 +71,167 @@ public class Dashboard extends JFrame implements UserCreatedListener {
     private void fetchSaleData() {
         String[] columnNames = {"Sale ID", "Order ID", "Item Name", "Amount", "Unit Price", "Total Price"};
 
-        try (Connection connection = DatabaseHelper.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(
-                     "SELECT s.id AS sale_id, " +
-                             "o.id AS order_id, " +
-                             "m.name AS item_name, " +
-                             "o.amount AS amount, " +
-                             "m.price AS unit_price, " +
-                             "o.total_price AS total_price " +
-                             "FROM sold_items s " +
-                             "JOIN order_items o ON s.order_item_id = o.id " +
-                             "JOIN menu m ON o.item_id = m.id")) {
+        try (Connection connection = DatabaseHelper.getConnection()) {
+            assert connection != null;
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery(
+                         "SELECT s.id AS sale_id, " +
+                                 "o.id AS order_id, " +
+                                 "m.name AS item_name, " +
+                                 "o.amount AS amount, " +
+                                 "m.price AS unit_price, " +
+                                 "o.total_price AS total_price " +
+                                 "FROM sold_items s " +
+                                 "JOIN order_items o ON s.order_item_id = o.id " +
+                                 "JOIN menu m ON o.item_id = m.id")) {
 
-            DefaultTableModel saleTableModel = new DefaultTableModel(columnNames, 0);
+                saleTableModel = new DefaultTableModel(columnNames, 0);
 
-            while (resultSet.next()) {
-                Vector<Object> row = new Vector<>();
-                row.add(resultSet.getInt("sale_id"));
-                row.add(resultSet.getInt("order_id"));
-                row.add(resultSet.getString("item_name"));
-                row.add(resultSet.getInt("amount"));
-                row.add(resultSet.getDouble("unit_price"));
-                row.add(resultSet.getDouble("total_price"));
-                // Add more columns as needed
+                while (resultSet.next()) {
+                    Vector<Object> row = new Vector<>();
+                    row.add(resultSet.getInt("sale_id"));
+                    row.add(resultSet.getInt("order_id"));
+                    row.add(resultSet.getString("item_name"));
+                    row.add(resultSet.getInt("amount"));
+                    row.add(resultSet.getDouble("unit_price"));
+                    row.add(resultSet.getDouble("total_price"));
+                    // Add more columns as needed
 
-                saleTableModel.addRow(row);
+                    saleTableModel.addRow(row);
+                }
+
+                tableSale.setModel(saleTableModel);
+
             }
-
-            tableSale.setModel(saleTableModel);
-
         } catch (SQLException e) {
-            // Handle or log the exception appropriately
-            e.printStackTrace();
+            // Log the exception with relevant details
+            Logger logger = Logger.getLogger(Dashboard.class.getName()); // Assuming a Logger instance is available
+            logger.log(Level.SEVERE, "Error fetching sale data", e);
+            // Optionally, display a user-friendly error message
+            JOptionPane.showMessageDialog(null, "An error occurred while fetching sale data. Please check the logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
     private void fetchEmployeesData() {
         String[] columnNames = {"ID", "Username", "Employee Type"};
 
-        try (Connection connection = DatabaseHelper.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery("SELECT u.id, u.username, ut.type_name " +
-                     "FROM users u " +
-                     "INNER JOIN user_types ut ON u.user_type = ut.id " +
-                     "WHERE u.user_type IN (1, 2)")) {
+        try (Connection connection = DatabaseHelper.getConnection()) {
+            assert connection != null;
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery("SELECT u.id, u.username, ut.type_name " +
+                         "FROM users u " +
+                         "INNER JOIN user_types ut ON u.user_type = ut.id " +
+                         "WHERE u.user_type IN (1, 2)")) {
 
-            // Create the table model with headers
-            DefaultTableModel staffTableModel = new DefaultTableModel(columnNames, 0);
+                // Create the table model with headers
+                staffTableModel = new DefaultTableModel(columnNames, 0);
 
-            while (resultSet.next()) {
-                Vector<Object> row = new Vector<>();
-                row.add(resultSet.getInt("id"));
-                row.add(resultSet.getString("username"));
-                row.add(resultSet.getString("type_name"));
+                while (resultSet.next()) {
+                    Vector<Object> row = new Vector<>();
+                    row.add(resultSet.getInt("id"));
+                    row.add(resultSet.getString("username"));
+                    row.add(resultSet.getString("type_name"));
 
-                staffTableModel.addRow(row);
+                    staffTableModel.addRow(row);
+                }
+
+                // Set the table model to the JTable component
+                tableStaff.setModel(staffTableModel);
+
             }
-
-            // Set the table model to the JTable component
-            tableStaff.setModel(staffTableModel);
-
         } catch (SQLException e) {
-            // Handle or log the exception appropriately
-            e.printStackTrace();
+            // Log the exception with relevant details
+            Logger logger = Logger.getLogger(Dashboard.class.getName()); // Assuming a Logger instance is available
+            logger.log(Level.SEVERE, "Error fetching employee data", e);
+            // Optionally, display a user-friendly error message
+            JOptionPane.showMessageDialog(null, "An error occurred while fetching employee data. Please check the logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void fetchSaleData() {
-        String[] columnNames = {"Sale ID", "Order ID", "Item Name", "Amount", "Unit Price", "Total Price"};
+    private void fetchCustomersData() {
+        String[] columnNames = {"ID", "Username", "User Type"};
 
-        try (Connection connection = DatabaseHelper.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(
-                     "SELECT s.id AS sale_id, " +
-                             "o.id AS order_id, " +
-                             "m.name AS item_name, " +
-                             "o.amount AS amount, " +
-                             "m.price AS unit_price, " +
-                             "o.total_price AS total_price " +
-                             "FROM sold_items s " +
-                             "JOIN order_items o ON s.order_item_id = o.id " +
-                             "JOIN menu m ON o.item_id = m.id")) {
+        try (Connection connection = DatabaseHelper.getConnection()) {
+            assert connection != null;
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery("SELECT u.id, u.username, ut.type_name " +
+                         "FROM users u " +
+                         "INNER JOIN user_types ut ON u.user_type = ut.id " +
+                         "WHERE u.user_type = 3")) {
 
-            DefaultTableModel saleTableModel = new DefaultTableModel(columnNames, 0);
+                // Create the table model with headers
+                customerTableModel = new DefaultTableModel(columnNames, 0);
 
-            while (resultSet.next()) {
-                Vector<Object> row = new Vector<>();
-                row.add(resultSet.getInt("sale_id"));
-                row.add(resultSet.getInt("order_id"));
-                row.add(resultSet.getString("item_name"));
-                row.add(resultSet.getInt("amount"));
-                row.add(resultSet.getDouble("unit_price"));
-                row.add(resultSet.getDouble("total_price"));
-                // Add more columns as needed
+                while (resultSet.next()) {
+                    Vector<Object> row = new Vector<>();
+                    row.add(resultSet.getInt("id"));
+                    row.add(resultSet.getString("username"));
+                    row.add(resultSet.getString("type_name"));
 
-                saleTableModel.addRow(row);
+                    customerTableModel.addRow(row);
+                }
+
+                // Set the table model to the JTable component
+                tableCustomers.setModel(customerTableModel);
+
             }
-
-            tableSale.setModel(saleTableModel);
-
         } catch (SQLException e) {
-            // Handle or log the exception appropriately
-            e.printStackTrace();
+            // Log the exception with relevant details
+            Logger logger = Logger.getLogger(Dashboard.class.getName()); // Assuming a Logger instance is available
+            logger.log(Level.SEVERE, "Error fetching customer data", e);
+            // Optionally, display a user-friendly error message
+            JOptionPane.showMessageDialog(null, "An error occurred while fetching customer data. Please check the logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    @Override
-    public void onUserCreated() {
+    private void fetchMenuData() {
+        String[] columnNames = {"ID", "Name", "Price"};
+
+        try (Connection connection = DatabaseHelper.getConnection()) {
+            assert connection != null;
+            try (Statement statement = connection.createStatement();
+                 ResultSet resultSet = statement.executeQuery("SELECT id, name, price FROM menu")) {
+
+                // Create the table model with headers
+                menuTableModel = new DefaultTableModel(columnNames, 0);
+
+                while (resultSet.next()) {
+                    Vector<Object> row = new Vector<>();
+                    row.add(resultSet.getInt("id"));
+                    row.add(resultSet.getString("name"));
+                    row.add(resultSet.getString("price"));
+
+                    menuTableModel.addRow(row);
+                }
+
+                // Set the table model to the JTable component
+                tableMenu.setModel(menuTableModel);
+
+            }
+        } catch (SQLException e) {
+            // Log the exception with relevant details
+            Logger logger = Logger.getLogger(Dashboard.class.getName()); // Assuming a Logger instance is available
+            logger.log(Level.SEVERE, "Error fetching menu data", e);
+            // Optionally, display a user-friendly error message
+            JOptionPane.showMessageDialog(null, "An error occurred while fetching menu data. Please check the logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public void onItemCreated() {
         // Refresh the table data when a new user is created
         refreshTableData();
     }
 
     private void refreshTableData() {
         staffTableModel.setRowCount(0); // Clear existing data
+        saleTableModel.setRowCount(0);
+        customerTableModel.setRowCount(0);
+        menuTableModel.setRowCount(0);
+
         fetchEmployeesData(); // Fetch and add the updated data
+        fetchSaleData();
+        fetchCustomersData();
+        fetchMenuData();
     }
 
     public static void main(String[] args) throws SQLException {
