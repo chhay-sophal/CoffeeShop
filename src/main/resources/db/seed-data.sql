@@ -63,6 +63,6 @@ INSERT INTO order_items (item_id, amount, total_price, paid, completed) VALUES (
 -- Add more order items as needed
 
 -- sold_items_seed.sql
-INSERT INTO sold_items (sold_item, amount, total_price) VALUES (1, 5, 17.50);
-INSERT INTO sold_items (sold_item, amount, total_price) VALUES (3, 3, 13.50);
+INSERT INTO sold_items (order_item_id) VALUES (1);
+INSERT INTO sold_items (order_item_id) VALUES (3);
 -- Add more sold items as needed

@@ -18,44 +18,75 @@ public class Dashboard extends JFrame implements UserCreatedListener {
     private JTable tableStaff;
     private JTable tableUser;
     private JButton createAUserAccountButton;
-    private JTable table1;
+    private JTable tableSale;
     private JButton button1;
     private DefaultTableModel staffTableModel;
 
     public Dashboard() {
+        fetchSaleData();
+        fetchStaffData();
 
         createAnEmployeeAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 // Create and show the dialog when the button is clicked
                 AddStaffClass createStaffDialog = new AddStaffClass(Dashboard.this);
-                createStaffDialog.setSize(500,300);
+                createStaffDialog.setSize(500, 300);
                 createStaffDialog.pack();
                 createStaffDialog.setVisible(true);
             }
         });
 
-        // Initialize table model and set it to the table
-//        staffTableModel = new DefaultTableModel();
-        String[] columnNames = {"ID", "Username", "Employee Type"};
-        staffTableModel = new DefaultTableModel(columnNames, 0);
-        tableStaff.setModel(staffTableModel);
-
-        // Fetch staff data from the database
-        fetchStaffData();
         createAUserAccountButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
 
             }
         });
-        tabbedPane1.addComponentListener(new ComponentAdapter() {
-        });
-        tabbedPane1.addFocusListener(new FocusAdapter() {
-        });
+    }
+
+    private void fetchSaleData() {
+        String[] columnNames = {"Sale ID", "Order ID", "Item Name", "Amount", "Unit Price", "Total Price"};
+
+        try (Connection connection = DatabaseHelper.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(
+                     "SELECT s.id AS sale_id, " +
+                             "o.id AS order_id, " +
+                             "m.name AS item_name, " +
+                             "o.amount AS amount, " +
+                             "m.price AS unit_price, " +
+                             "o.total_price AS total_price " +
+                             "FROM sold_items s " +
+                             "JOIN order_items o ON s.order_item_id = o.id " +
+                             "JOIN menu m ON o.item_id = m.id")) {
+
+            DefaultTableModel saleTableModel = new DefaultTableModel(columnNames, 0);
+
+            while (resultSet.next()) {
+                Vector<Object> row = new Vector<>();
+                row.add(resultSet.getInt("sale_id"));
+                row.add(resultSet.getInt("order_id"));
+                row.add(resultSet.getString("item_name"));
+                row.add(resultSet.getInt("amount"));
+                row.add(resultSet.getDouble("unit_price"));
+                row.add(resultSet.getDouble("total_price"));
+                // Add more columns as needed
+
+                saleTableModel.addRow(row);
+            }
+            
+            tableSale.setModel(saleTableModel);
+
+        } catch (SQLException e) {
+            // Handle or log the exception appropriately
+            e.printStackTrace();
+        }
     }
 
     private void fetchStaffData() {
+        String[] columnNames = {"ID", "Username", "Employee Type"};
+
         try (Connection connection = DatabaseHelper.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery("SELECT u.id, u.username, ut.type_name " +
@@ -63,15 +94,20 @@ public class Dashboard extends JFrame implements UserCreatedListener {
                      "INNER JOIN user_types ut ON u.user_type = ut.id " +
                      "WHERE u.user_type IN (1, 2)")) {
 
+            // Create the table model with headers
+            DefaultTableModel staffTableModel = new DefaultTableModel(columnNames, 0);
+
             while (resultSet.next()) {
                 Vector<Object> row = new Vector<>();
                 row.add(resultSet.getInt("id"));
                 row.add(resultSet.getString("username"));
                 row.add(resultSet.getString("type_name"));
-                // Add more columns as needed
 
                 staffTableModel.addRow(row);
             }
+
+            // Set the table model to the JTable component
+            tableStaff.setModel(staffTableModel);
 
         } catch (SQLException e) {
             // Handle or log the exception appropriately
@@ -90,19 +126,11 @@ public class Dashboard extends JFrame implements UserCreatedListener {
         fetchStaffData(); // Fetch and add the updated data
     }
 
-    private static int getRowCount(ResultSet resultSet) throws SQLException {
-        int rowCount = 0;
-        while (resultSet.next()) {
-            rowCount++;
-        }
-        return rowCount;
-    }
-
     public static void main(String[] args) throws SQLException {
         Dashboard dashboard = new Dashboard();
         dashboard.setContentPane(dashboard.dashboardPanel);
         dashboard.setTitle("Dashboard");
-        dashboard.setSize(500,300);
+        dashboard.setSize(1000, 600);
         dashboard.setVisible(true);
         dashboard.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
