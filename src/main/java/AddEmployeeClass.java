@@ -14,6 +14,7 @@ public class AddEmployeeClass extends JDialog {
     private JPasswordField passwordField;
     private JPasswordField passwordFieldConfirm;
     private JComboBox comboBoxUserType;
+    private JTextField textFieldPassword;
     private ItemCreatedListener itemCreatedListener;
 
     public AddEmployeeClass(ItemCreatedListener listener) {
@@ -59,16 +60,7 @@ public class AddEmployeeClass extends JDialog {
     private void onOK() {
         // add your code here
         String username = textFieldUsername.getText();
-        char[] password = passwordField.getPassword();
-        char[] confirmPassword = passwordFieldConfirm.getPassword();
-        // Check if passwords match
-        if (!passwordMatches(password, confirmPassword)) {
-            JOptionPane.showMessageDialog(this, "Passwords do not match", "Error", JOptionPane.ERROR_MESSAGE);
-            return; // Exit the method if passwords don't match
-        }
-
-        // Hash the password (use a secure method in a real application)
-        String hashedPassword = new String(password);
+        String password = textFieldPassword.getText();
 
         // Check user type
         int userType;
@@ -89,7 +81,7 @@ public class AddEmployeeClass extends JDialog {
             try (PreparedStatement preparedStatement = connection.prepareStatement(insertSql)) {
                 // Set parameters for the prepared statement
                 preparedStatement.setString(1, username);
-                preparedStatement.setString(2, hashedPassword);
+                preparedStatement.setString(2, password);
                 preparedStatement.setInt(3, userType);
 
                 // Execute the SQL statement
@@ -107,12 +99,6 @@ public class AddEmployeeClass extends JDialog {
             JOptionPane.showMessageDialog(this, "Error creating user", "Error", JOptionPane.ERROR_MESSAGE);
         }
         dispose();
-    }
-
-    private boolean passwordMatches(char[] password, char[] confirmPassword) {
-        // Implement password matching logic
-        // For simplicity, compare as strings in this example
-        return new String(password).equals(new String(confirmPassword));
     }
 
     private void onCancel() {

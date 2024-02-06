@@ -15,13 +15,15 @@ public class UpdateEmployeeClass extends JDialog {
     private JButton buttonCancel;
     private JTextField usernameTextField;
     private JComboBox empTypeComboBox;
+    private JTextField passwordTextField;
     private final ItemCreatedListener itemCreatedListener;
     private final int empID;
 
-    public UpdateEmployeeClass(ItemCreatedListener listener, int id, String username, String empType) {
+    public UpdateEmployeeClass(ItemCreatedListener listener, int id, String username, String password, String empType) {
         this.itemCreatedListener = listener;
         this.usernameTextField.setText(username);
         this.empTypeComboBox.setSelectedItem(empType);
+        this.passwordTextField.setText(password);
         this.empID = id;
         setContentPane(contentPane);
         setModal(true);
@@ -59,7 +61,9 @@ public class UpdateEmployeeClass extends JDialog {
         // add your code here
         String username = usernameTextField.getText();
         String empType = (String) empTypeComboBox.getSelectedItem();
-        int empTypeID = -1;
+        String password = passwordTextField.getText();
+
+        int empTypeID;
         // Update data in the database
         try (Connection connection = DatabaseHelper.getConnection()) {
             assert connection != null;
@@ -71,12 +75,13 @@ public class UpdateEmployeeClass extends JDialog {
             }
 
             // Prepare the SQL statement for updating
-            String updateSql = "UPDATE users SET username = ?, user_type = ? WHERE id = ?";
+            String updateSql = "UPDATE users SET username = ?, password =?, user_type = ? WHERE id = ?";
             try (PreparedStatement preparedStatement = connection.prepareStatement(updateSql)) {
                 // Set parameters for the prepared statement
                 preparedStatement.setString(1, username);
-                preparedStatement.setInt(2, empTypeID);
-                preparedStatement.setInt(3, this.empID);
+                preparedStatement.setString(2, password);
+                preparedStatement.setInt(3, empTypeID);
+                preparedStatement.setInt(4, this.empID);
 
                 // Execute the SQL statement
                 int rowsAffected = preparedStatement.executeUpdate();
