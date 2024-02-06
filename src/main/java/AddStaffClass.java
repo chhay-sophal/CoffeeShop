@@ -97,7 +97,7 @@ public class AddStaffClass extends JDialog {
                 preparedStatement.executeUpdate();
             }
 
-            JOptionPane.showMessageDialog(this, "User created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Employee created successfully", "Success", JOptionPane.INFORMATION_MESSAGE);
             // Notify the listener when a user is created
             if (userCreatedListener != null) {
                 userCreatedListener.onUserCreated();
