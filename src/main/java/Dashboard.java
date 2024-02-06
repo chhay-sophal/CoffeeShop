@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 public class Dashboard extends JFrame implements ItemCreatedListener {
     private static final String APPLICATIONS_FILE = "config.properties";
-    private JPanel dashboardPanel;
+    public JPanel dashboardPanel;
     private JTabbedPane tabbedPane1;
     private JButton createEmployeeButton;
     private JTable tableEmployee;

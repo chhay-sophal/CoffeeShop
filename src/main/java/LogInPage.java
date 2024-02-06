@@ -1,4 +1,7 @@
+import database.DatabaseHelper;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.Connection;
@@ -11,6 +14,9 @@ public class LogInPage extends JFrame {
     private JPanel panel1;
     private JButton loginButton;
     private JPasswordField passwordPasswordField;
+    private JTextField textFieldUsername;
+    private JPasswordField passwordField;
+    private JLabel loginImg;
     private JTextPane textPane1;
 
 
@@ -19,7 +25,7 @@ public class LogInPage extends JFrame {
             assert connection != null;
 
             try (Statement statement = connection.createStatement();
-                 ResultSet resultSet = statement.executeQuery("SELECT * FROM employees")) {
+                 ResultSet resultSet = statement.executeQuery("SELECT * FROM users WHERE user_type IN (1, 2)")) {
 
                 while (resultSet.next()) {
                     String username = resultSet.getString("username");
@@ -38,6 +44,17 @@ public class LogInPage extends JFrame {
 
     }
     public LogInPage() {
+        // Set image
+        ImageIcon originalIcon = new ImageIcon("images/login.jpg");
+        Image originalImage = originalIcon.getImage();
+        int originalWidth = originalImage.getWidth(null);
+        int originalHeight = originalImage.getHeight(null);
+        int newWidth = 400;
+        int newHeight = (int) Math.round((double) newWidth / originalWidth * originalHeight);
+        Image resizedImage = originalImage.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
+        ImageIcon resizedIcon = new ImageIcon(resizedImage);
+        loginImg.setIcon(resizedIcon);
+        loginImg.setText("");
 
         //Apply login action to the login btn
         loginButton.addActionListener(new ActionListener() {
@@ -47,54 +64,68 @@ public class LogInPage extends JFrame {
                     assert connection != null;
 
                     //Get input Username
-                    String inputUsername = textPane1.getText();
+                    String inputUsername = textFieldUsername.getText();
 
                     //Get input UserPassword
-                    char[] arrPassword = passwordPasswordField.getPassword();
+                    char[] arrPassword = passwordField.getPassword();
                     String inputPassword = new String(arrPassword);
 
                     // Validate text field to not null
-                    if (!inputUsername.isEmpty() &&!inputPassword.isEmpty()) {
-                        //print input values
-                        System.out.println("Input username :" + inputUsername);
-                        System.out.println("Input password :" +inputPassword);
+                    if (!inputUsername.isEmpty() && !inputPassword.isEmpty()) {
+                        // Print input values
+                        System.out.println("Input username: " + inputUsername);
+                        System.out.println("Input password: " + inputPassword);
 
                         try (Statement statement = connection.createStatement();
-                             ResultSet resultSet = statement.executeQuery("SELECT * FROM employees WHERE username = '" + inputUsername + "'")) {
+                             ResultSet resultSet = statement.executeQuery("SELECT * FROM users WHERE username = '" + inputUsername + "'")) {
 
                             int rowCount = 0;
+                            boolean validLogin = false;
+
                             while (resultSet.next()) {
                                 rowCount++;
 
                                 String storedPassword = resultSet.getString("password");
                                 String storedUsername = resultSet.getString("username");
+                                int userType = resultSet.getInt("user_type");
 
-                                //set admin username and password
+                                // Set admin username and password
                                 String userAdmin = "Admin";
                                 String passwordAdmin = "adminComplexPsw123";
 
                                 if (storedPassword.equals(inputPassword) && storedUsername.equals(inputUsername)) {
-                                    if (inputUsername.equals(userAdmin) && inputPassword.equals(passwordAdmin)){
-                                        //Navigate to admin page
-
-                                    } else{
-                                        //Navigate to user page
+                                    if (inputUsername.equals(userAdmin) && inputPassword.equals(passwordAdmin)) {
+                                        System.out.println("Login as default Admin");
+                                    } else if (userType == 1) {
+                                        Dashboard dashboard = new Dashboard();
+                                        dashboard.setContentPane(dashboard.dashboardPanel);
+                                        dashboard.setTitle("Dashboard");
+                                        dashboard.setSize(1000, 600);
+                                        dashboard.setVisible(true);
+                                        dashboard.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                        dispose();
+                                    } else {
+                                        System.out.println("Login as normal user");
                                     }
+
                                     // Valid login: Implement your logic here (e.g., open a new window)
                                     System.out.println("Login successful!");
+                                    validLogin = true;
                                     break; // Exit the loop since a valid login is found
-                                }else{
-                                    JOptionPane.showMessageDialog(null, "Invalid username or Password!", "Error", JOptionPane.ERROR_MESSAGE);
-
                                 }
                             }
-                            if (rowCount == 0) {
-                                JOptionPane.showMessageDialog(null, "Invalid username or Password!", "Error", JOptionPane.ERROR_MESSAGE);
+
+                            if (!validLogin) {
+                                JOptionPane.showMessageDialog(null, "Invalid username or password!", "Error", JOptionPane.ERROR_MESSAGE);
                             }
+
+                        } catch (SQLException ex) {
+                            ex.printStackTrace(); // Handle or log the SQLException
                         }
                     } else {
                         JOptionPane.showMessageDialog(null, "Input username or password cannot be empty!", "Warning", JOptionPane.WARNING_MESSAGE);
                     }
+
 
 
                 } catch (SQLException ex) {
@@ -112,7 +143,7 @@ public class LogInPage extends JFrame {
 
         logInPage.setContentPane(logInPage.panel1);
         logInPage.setTitle("Login");
-        logInPage.setSize(500,300);
+        logInPage.setSize(1000,600);
         logInPage.setVisible(true);
         logInPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
