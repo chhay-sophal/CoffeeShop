@@ -19,7 +19,6 @@ public class LogInPage extends JFrame {
     private JLabel loginImg;
     private JTextPane textPane1;
 
-
     private void DebugEmployeeTbl(){
         try (Connection connection = DatabaseHelper.getConnection()) {
             assert connection != null;
@@ -45,7 +44,7 @@ public class LogInPage extends JFrame {
     }
     public LogInPage() {
         // Set image
-        ImageIcon originalIcon = new ImageIcon("images/login.jpg");
+        ImageIcon originalIcon = new ImageIcon("images/login2.png");
         Image originalImage = originalIcon.getImage();
         int originalWidth = originalImage.getWidth(null);
         int originalHeight = originalImage.getHeight(null);
