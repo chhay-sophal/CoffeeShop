@@ -55,6 +55,12 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
     private static final String MENU_QUERY = "SELECT id, name, price FROM menu";
 
     public Dashboard() {
+        setContentPane(dashboardPanel);
+        setTitle("Dashboard");
+        setSize(1000, 600);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         fetchSaleData();
         fetchEmployeesData();
         fetchCustomersData();
@@ -431,11 +437,6 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
     }
 
     public static void main(String[] args) throws SQLException {
-        Dashboard dashboard = new Dashboard();
-        dashboard.setContentPane(dashboard.dashboardPanel);
-        dashboard.setTitle("Dashboard");
-        dashboard.setSize(1000, 600);
-        dashboard.setVisible(true);
-        dashboard.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        new Dashboard();
     }
 }

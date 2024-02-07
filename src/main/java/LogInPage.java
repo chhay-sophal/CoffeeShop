@@ -97,14 +97,12 @@ public class LogInPage extends JFrame {
                                     if (inputUsername.equals(userAdmin) && inputPassword.equals(passwordAdmin)) {
                                         System.out.println("Login as default Admin");
                                     } else if (userType == 1) {
-                                        Dashboard dashboard = new Dashboard();
-                                        dashboard.setContentPane(dashboard.dashboardPanel);
-                                        dashboard.setTitle("Dashboard");
-                                        dashboard.setSize(1000, 600);
-                                        dashboard.setVisible(true);
-                                        dashboard.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                        new Dashboard();
                                         dispose();
-                                    } else {
+                                    } else if (userType == 2) {
+                                        new OrderManagement();
+                                        dispose();
+                                    }else {
                                         System.out.println("Login as normal user");
                                     }
 
