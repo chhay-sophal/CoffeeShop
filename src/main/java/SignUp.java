@@ -15,6 +15,7 @@ public class SignUp extends JFrame {
     private JPasswordField passwordField;
     private JPasswordField passwordFieldConfirm;
     private JButton signUpButton;
+    private JButton backToLogInButton;
 
     public SignUp() {
         // Initialize
@@ -79,6 +80,13 @@ public class SignUp extends JFrame {
                     // Optionally, display a user-friendly error message
                     JOptionPane.showMessageDialog(null, "An error occurred while fetching data. Please check the logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
                 }
+            }
+        });
+        backToLogInButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new LogInPage();
+                dispose();
             }
         });
     }

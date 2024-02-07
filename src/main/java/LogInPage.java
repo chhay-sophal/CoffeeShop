@@ -17,6 +17,7 @@ public class LogInPage extends JFrame {
     private JTextField textFieldUsername;
     private JPasswordField passwordField;
     private JLabel loginImg;
+    private JButton signUPButton;
     private JTextPane textPane1;
 
     private void DebugEmployeeTbl(){
@@ -143,6 +144,13 @@ public class LogInPage extends JFrame {
             }
         });
 
+        signUPButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new SignUp();
+                dispose();
+            }
+        });
     }
 
     public static void main(String[] args) throws SQLException {
