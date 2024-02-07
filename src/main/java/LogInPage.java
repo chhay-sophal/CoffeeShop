@@ -43,6 +43,14 @@ public class LogInPage extends JFrame {
 
     }
     public LogInPage() {
+        // Initialize
+        DebugEmployeeTbl();
+        setContentPane(panel1);
+        setTitle("Login");
+        setSize(1000,600);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         // Set image
         ImageIcon originalIcon = new ImageIcon("src/main/java/images/login2.png");
         Image originalImage = originalIcon.getImage();
@@ -134,14 +142,6 @@ public class LogInPage extends JFrame {
     }
 
     public static void main(String[] args) throws SQLException {
-
-        LogInPage logInPage = new LogInPage();
-        logInPage.DebugEmployeeTbl();
-
-        logInPage.setContentPane(logInPage.panel1);
-        logInPage.setTitle("Login");
-        logInPage.setSize(1000,600);
-        logInPage.setVisible(true);
-        logInPage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        new LogInPage();
     }
 }
