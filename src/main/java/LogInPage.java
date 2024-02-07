@@ -113,7 +113,7 @@ public class LogInPage extends JFrame {
                                         System.out.println("Login as staff user");
                                         dispose();
                                     }else {
-                                        new HomePage();
+                                        new OrderPage();
                                         System.out.println("Login as normal user");
                                         dispose();
                                     }
