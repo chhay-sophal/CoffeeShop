@@ -26,6 +26,13 @@ public class HomePage extends JFrame {
     private JLabel totalPriceLabel;
 
     public HomePage() {
+        // Initialize
+        setContentPane(panel1);
+        setTitle("HomePage");
+        setSize(1000, 600);
+        setVisible(true);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
         ImageIcon Image = new ImageIcon("images/logo.png");
         image.setIcon(Image);
         ArrayList<Product> productList = new ArrayList<>();
@@ -180,13 +187,7 @@ public class HomePage extends JFrame {
     public static void main(String[] args) {
 
         SwingUtilities.invokeLater(() -> {
-            HomePage homePage = new HomePage();
-            homePage.setContentPane(homePage.panel1);
-//            homePage.getContentPane().add(label);
-            homePage.setTitle("HomePage");
-            homePage.setSize(1000, 600);
-            homePage.setVisible(true);
-            homePage.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            new HomePage();
         });
     }
 }

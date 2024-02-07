@@ -105,12 +105,16 @@ public class LogInPage extends JFrame {
                                         System.out.println("Login as default Admin");
                                     } else if (userType == 1) {
                                         new Dashboard();
+                                        System.out.println("Login as admin user");
                                         dispose();
                                     } else if (userType == 2) {
                                         new OrderManagement();
+                                        System.out.println("Login as staff user");
                                         dispose();
                                     }else {
+                                        new HomePage();
                                         System.out.println("Login as normal user");
+                                        dispose();
                                     }
 
                                     // Valid login: Implement your logic here (e.g., open a new window)
