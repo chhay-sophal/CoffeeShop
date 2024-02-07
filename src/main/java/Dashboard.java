@@ -13,6 +13,18 @@ public class Dashboard extends JFrame {
 
     }
 
+    public void showForm() {
+        // Create a JFrame instance
+        JFrame frame = new JFrame("Form Dashboard");
+
+        // Set the content pane to the panel of the HomePage class
+        frame.setContentPane(dashboardPanel);
+
+        // Adjust the frame size and make it visible
+        frame.pack();
+        frame.setVisible(true);
+    }
+
     private static int getRowCount(ResultSet resultSet) throws SQLException {
         int rowCount = 0;
         while (resultSet.next()) {
@@ -22,6 +34,7 @@ public class Dashboard extends JFrame {
     }
 
     public static void main(String[] args) throws SQLException {
+
         try (Connection connection = DatabaseHelper.getConnection()) {
             assert connection != null;
             try (Statement statement = connection.createStatement();

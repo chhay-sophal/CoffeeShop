@@ -34,9 +34,6 @@ public class LogInPage extends JFrame {
         }
     }
 
-    private void loadedHomePage(){
-
-    }
     public LogInPage() {
 
         //Apply login action to the login btn
@@ -75,14 +72,18 @@ public class LogInPage extends JFrame {
 
                                 if (storedPassword.equals(inputPassword) && storedUsername.equals(inputUsername)) {
                                     if (inputUsername.equals(userAdmin) && inputPassword.equals(passwordAdmin)){
-                                        //Navigate to admin page
-
+                                        //Navigate to Dashboard
+                                        Dashboard d = new Dashboard();
+                                        d.showForm();
                                     } else{
-                                        //Navigate to user page
+                                        //Navigate to HomePage
+                                        HomePage h = new HomePage();
+                                        h.showForm();
+                                        // Valid login: Implement your logic here (e.g., open a new window)
+                                        System.out.println("Login successful!");
+                                        break; // Exit the loop since a valid login is found
                                     }
-                                    // Valid login: Implement your logic here (e.g., open a new window)
-                                    System.out.println("Login successful!");
-                                    break; // Exit the loop since a valid login is found
+
                                 }else{
                                     JOptionPane.showMessageDialog(null, "Invalid username or Password!", "Error", JOptionPane.ERROR_MESSAGE);
 
