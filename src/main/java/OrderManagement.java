@@ -2,13 +2,10 @@ import database.DatabaseHelper;
 
 import javax.swing.*;
 import javax.swing.table.*;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +13,7 @@ import java.util.logging.Logger;
 public class OrderManagement extends JFrame {
     private JTable tableOrder;
     private JPanel orderPanel;
+    private JButton logOutButton;
     private DefaultTableModel tableModel;
 
     public OrderManagement() {
@@ -27,11 +25,18 @@ public class OrderManagement extends JFrame {
         setSize(600, 400);
         setLocationRelativeTo(null);
         setVisible(true);
+        logOutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new LogInPage();
+                dispose();
+            }
+        });
     }
 
     private void fetchDataFromDatabase() {
         String query = "SELECT * FROM order_items";
-        Object[] columnNames = {"ID", "Item ID", "Amount", "Total Price", "Paid", "Completed", "Action", "Action"};
+        Object[] columnNames = {"ID", "Item ID", "User ID", "Amount", "Total Price", "Paid", "Completed", "Action", "Action"};
         tableModel = new DefaultTableModel(columnNames, 0);
 
         try (Connection connection = DatabaseHelper.getConnection()) {
@@ -54,12 +59,12 @@ public class OrderManagement extends JFrame {
                     for (int i = 1; i <= (columnNames.length - 2); i++) {
                         row.add(resultSet.getObject(i));
                     }
-                    if ((Integer) resultSet.getObject(5) == 1) {
+                    if ((Integer) resultSet.getObject(6) == 1) {
                         row.add("Set as paid");
                     } else {
                         row.add("Set as unpaid");
                     }
-                    if ((Integer) resultSet.getObject(6) == 1) {
+                    if ((Integer) resultSet.getObject(7) == 1) {
                         row.add("Make as complete");
                     } else {
                         row.add("Make as incomplete");
@@ -69,10 +74,10 @@ public class OrderManagement extends JFrame {
 
 
                 tableOrder.setModel(tableModel);
-                tableOrder.getColumnModel().getColumn(6).setCellRenderer(new ButtonRenderer());
-                tableOrder.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor(new JTextField()));
                 tableOrder.getColumnModel().getColumn(7).setCellRenderer(new ButtonRenderer());
                 tableOrder.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JTextField()));
+                tableOrder.getColumnModel().getColumn(8).setCellRenderer(new ButtonRenderer());
+                tableOrder.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JTextField()));
 
             }
         } catch (SQLException e) {
@@ -119,17 +124,17 @@ public class OrderManagement extends JFrame {
                 int row = tableOrder.convertRowIndexToModel(tableOrder.getEditingRow());
                 int column = tableOrder.convertColumnIndexToModel(tableOrder.getEditingColumn());
                 Integer OrderID = (Integer) tableOrder.getValueAt(row, 0);
-                Integer paid = (Integer) tableOrder.getValueAt(row, 4);
-                Integer completed = (Integer) tableOrder.getValueAt(row, 5);
+                Integer paid = (Integer) tableOrder.getValueAt(row, 5);
+                Integer completed = (Integer) tableOrder.getValueAt(row, 6);
                 System.out.println("Button clicked in row " + row + ", column " + column + ", orderID = " + OrderID);
 
                 //Apply action to buttons in column
-                if(column == 6){
+                if(column == 7){
                     int dialogResult = JOptionPane.showConfirmDialog(null, "This order with id " + OrderID + " will be marked as completed. \n" +
                             "Are you sure want to marked as completed?");
 
                     if (dialogResult == JOptionPane.YES_OPTION) {
-                        System.out.println("6");
+                        System.out.println("7");
                         String query = "UPDATE order_items SET completed = 1 WHERE id = ?";
                         if (completed == 1) {
                             query = "UPDATE order_items SET completed = 0 WHERE id = ?";
@@ -148,12 +153,12 @@ public class OrderManagement extends JFrame {
                             JOptionPane.showMessageDialog(null, "An error occurred while fetching data. Please check the logs for details." + ex, "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
-                }else if(column == 7){
+                }else if(column == 8){
                     int dialogResult = JOptionPane.showConfirmDialog(null, "This order with id " + OrderID + " will be marked as paid. \n" +
                             "Are you sure want to marked as paid?");
 
                     if (dialogResult == JOptionPane.YES_OPTION) {
-                        System.out.println("7");
+                        System.out.println("8");
                         String query = "UPDATE order_items SET paid = 1 WHERE id = ? ";
 
                         if (paid == 1) {

@@ -19,6 +19,7 @@ public class LogInPage extends JFrame {
     private JLabel loginImg;
     private JButton signUPButton;
     private JTextPane textPane1;
+    public int userID;
 
     private void DebugEmployeeTbl(){
         try (Connection connection = DatabaseHelper.getConnection()) {
@@ -95,6 +96,7 @@ public class LogInPage extends JFrame {
 
                                 String storedPassword = resultSet.getString("password");
                                 String storedUsername = resultSet.getString("username");
+                                userID = resultSet.getInt("id");
                                 int userType = resultSet.getInt("user_type");
 
                                 // Set admin username and password
@@ -113,7 +115,7 @@ public class LogInPage extends JFrame {
                                         System.out.println("Login as staff user");
                                         dispose();
                                     }else {
-                                        new OrderPage();
+                                        new OrderPage(userID);
                                         System.out.println("Login as normal user");
                                         dispose();
                                     }

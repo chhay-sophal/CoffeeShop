@@ -29,6 +29,7 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
     private JButton updateEmployeeButton;
     private JButton deleteCustomerButton;
     private JButton updateCustomerButton;
+    private JButton logOutButton;
     private DefaultTableModel employeeTableModel, saleTableModel, customerTableModel, menuTableModel;
     private String userID, userUsername, password, userUserType;
     private String menuID, menuName, menuPrice;
@@ -332,6 +333,13 @@ public class Dashboard extends JFrame implements ItemCreatedListener {
                 } else {
                     JOptionPane.showMessageDialog(null, "Please select an item.");
                 }
+            }
+        });
+        logOutButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new LogInPage();
+                dispose();
             }
         });
     }
