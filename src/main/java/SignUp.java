@@ -25,7 +25,7 @@ public class SignUp extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         // Set image
-        ImageIcon originalIcon = new ImageIcon("images/signup.png");
+        ImageIcon originalIcon = new ImageIcon("src/main/java/images/signup.png");
         Image originalImage = originalIcon.getImage();
         int originalWidth = originalImage.getWidth(null);
         int originalHeight = originalImage.getHeight(null);
