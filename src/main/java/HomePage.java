@@ -44,8 +44,13 @@ public class HomePage extends JFrame {
     ArrayList<Product> productList = new ArrayList<>();
 
     public HomePage() {
-        ImageIcon Image = new ImageIcon("icon.png");
-        image.setIcon(Image);
+//        ImageIcon Image = new ImageIcon("icon.png");
+//        image.setIcon(Image);
+        ImageIcon originalIcon = new ImageIcon("icon.png");
+// Get the original image from the ImageIcon
+        Image originalImage = originalIcon.getImage();
+
+        image.setIcon(originalIcon);
 
         String[] columnNames = {"Name", "Price"};
 
