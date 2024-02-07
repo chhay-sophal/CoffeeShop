@@ -54,8 +54,16 @@ public class OrderManagement extends JFrame {
                     for (int i = 1; i <= (columnNames.length - 2); i++) {
                         row.add(resultSet.getObject(i));
                     }
-                    row.add("Completed");
-                    row.add("Set as Paid");
+                    if ((Integer) resultSet.getObject(5) == 1) {
+                        row.add("Set as paid");
+                    } else {
+                        row.add("Set as unpaid");
+                    }
+                    if ((Integer) resultSet.getObject(6) == 1) {
+                        row.add("Make as complete");
+                    } else {
+                        row.add("Make as incomplete");
+                    }
                     tableModel.addRow(row);
                 }
 
@@ -111,40 +119,60 @@ public class OrderManagement extends JFrame {
                 int row = tableOrder.convertRowIndexToModel(tableOrder.getEditingRow());
                 int column = tableOrder.convertColumnIndexToModel(tableOrder.getEditingColumn());
                 Integer OrderID = (Integer) tableOrder.getValueAt(row, 0);
+                Integer paid = (Integer) tableOrder.getValueAt(row, 4);
+                Integer completed = (Integer) tableOrder.getValueAt(row, 5);
                 System.out.println("Button clicked in row " + row + ", column " + column + ", orderID = " + OrderID);
 
                 //Apply action to buttons in column
                 if(column == 6){
-                    System.out.println("6");
-                    String query = "UPDATE order_items SET completed = 1 WHERE id = ?";
-                    try (Connection connection = DatabaseHelper.getConnection()) {
-                        assert connection != null;
-                        try (PreparedStatement statement = connection.prepareStatement(query)) {
-                            statement.setInt(1, OrderID);
-                            int rowsAffected = statement.executeUpdate();
-                            System.out.println("Rows affected: " + rowsAffected );
-                            //Reload the table Data
-                            fetchDataFromDatabase();
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "This order with id " + OrderID + " will be marked as completed. \n" +
+                            "Are you sure want to marked as completed?");
 
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        System.out.println("6");
+                        String query = "UPDATE order_items SET completed = 1 WHERE id = ?";
+                        if (completed == 1) {
+                            query = "UPDATE order_items SET completed = 0 WHERE id = ?";
                         }
-                    }catch(SQLException ex){
-                        JOptionPane.showMessageDialog(null, "An error occurred while fetching data. Please check the logs for details." + ex, "Error", JOptionPane.ERROR_MESSAGE);
+                        try (Connection connection = DatabaseHelper.getConnection()) {
+                            assert connection != null;
+                            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                                statement.setInt(1, OrderID);
+                                int rowsAffected = statement.executeUpdate();
+                                System.out.println("Rows affected: " + rowsAffected);
+                                //Reload the table Data
+                                fetchDataFromDatabase();
+
+                            }
+                        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(null, "An error occurred while fetching data. Please check the logs for details." + ex, "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }else if(column == 7){
-                    System.out.println("7");
-                    String query = "UPDATE order_items SET paid = 1 WHERE id = ? ";
-                    try (Connection connection = DatabaseHelper.getConnection()) {
-                        assert connection != null;
-                        try (PreparedStatement statement = connection.prepareStatement(query)) {
-                            statement.setInt(1, OrderID);
-                            int rowsAffected = statement.executeUpdate();
-                            System.out.println("Rows affected: " + rowsAffected );
-                            //Reload the table Data
-                            fetchDataFromDatabase();
+                    int dialogResult = JOptionPane.showConfirmDialog(null, "This order with id " + OrderID + " will be marked as paid. \n" +
+                            "Are you sure want to marked as paid?");
+
+                    if (dialogResult == JOptionPane.YES_OPTION) {
+                        System.out.println("7");
+                        String query = "UPDATE order_items SET paid = 1 WHERE id = ? ";
+
+                        if (paid == 1) {
+                            query = "UPDATE order_items SET paid = 0 WHERE id = ?";
                         }
 
-                    }catch(SQLException ex){
-                        JOptionPane.showMessageDialog(null, "An error occurred while fetching data. Please check the logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
+                        try (Connection connection = DatabaseHelper.getConnection()) {
+                            assert connection != null;
+                            try (PreparedStatement statement = connection.prepareStatement(query)) {
+                                statement.setInt(1, OrderID);
+                                int rowsAffected = statement.executeUpdate();
+                                System.out.println("Rows affected: " + rowsAffected);
+                                //Reload the table Data
+                                fetchDataFromDatabase();
+                            }
+
+                        } catch (SQLException ex) {
+                            JOptionPane.showMessageDialog(null, "An error occurred while fetching data. Please check the logs for details.", "Error", JOptionPane.ERROR_MESSAGE);
+                        }
                     }
                 }
 
