@@ -44,7 +44,7 @@ public class LogInPage extends JFrame {
     }
     public LogInPage() {
         // Set image
-        ImageIcon originalIcon = new ImageIcon("images/login2.png");
+        ImageIcon originalIcon = new ImageIcon("src/main/java/images/login2.png");
         Image originalImage = originalIcon.getImage();
         int originalWidth = originalImage.getWidth(null);
         int originalHeight = originalImage.getHeight(null);
