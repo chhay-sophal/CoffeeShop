@@ -24,9 +24,14 @@ public class OrderedItem extends JFrame {
         setSize(1000, 600);
         setVisible(true);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+//
+//        String query = "SELECT oi.id, oi.item_id, m.item_name, oi.amount, oi.total_price " +
+//                "FROM order_items oi " +
+//                "JOIN menu m ON oi.item_id = m.id " +
+//                "WHERE oi.completed = 0 AND oi.user_id = ?";
         String query = "SELECT id, item_id, amount, total_price FROM order_items WHERE completed = 0 AND user_id = ?";
         Object[] columnNames = {"ID", "Item ID", "Amount", "Total Price"};
+//        Object[] columnNames = {"ID", "Item ID", "Item Name", "Amount", "Total Price"};
         tableModel = new DefaultTableModel(columnNames, 0);
 
         try (Connection connection = DatabaseHelper.getConnection()) {
